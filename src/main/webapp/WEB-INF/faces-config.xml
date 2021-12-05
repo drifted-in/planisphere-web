@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="2.0"
+              xmlns="http://java.sun.com/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+    <application>
+        <locale-config>
+            <default-locale>en</default-locale>
+            <supported-locale>ar</supported-locale>
+            <supported-locale>bg_BG</supported-locale>
+            <supported-locale>cs_CZ</supported-locale>
+            <supported-locale>de_DE</supported-locale>
+            <supported-locale>en</supported-locale>
+            <supported-locale>es_ES</supported-locale>
+            <supported-locale>fa</supported-locale>
+            <supported-locale>fi_FI</supported-locale>
+            <supported-locale>fr</supported-locale>
+            <supported-locale>hu_HU</supported-locale>
+            <supported-locale>in_ID</supported-locale>
+            <supported-locale>it_IT</supported-locale>
+            <supported-locale>ja_JP</supported-locale>
+            <supported-locale>lt_LT</supported-locale>
+            <supported-locale>nl</supported-locale>
+            <supported-locale>pl</supported-locale>
+            <supported-locale>pt_BR</supported-locale>
+            <supported-locale>ro_RO</supported-locale>
+            <supported-locale>ru_RU</supported-locale>
+            <supported-locale>sk_SK</supported-locale>
+            <supported-locale>sl_SI</supported-locale>
+            <supported-locale>sv_SE</supported-locale>
+            <supported-locale>uk_UA</supported-locale>
+            <supported-locale>zh_CN</supported-locale>
+            <supported-locale>zh_TW</supported-locale>
+        </locale-config>
+        <resource-bundle>
+            <base-name>in.drifted.planisphere.web.UnicodeResourceBundle</base-name>
+            <var>msg</var>
+        </resource-bundle>
+    </application>
+    <factory>
+        <exception-handler-factory>in.drifted.planisphere.web.ViewExpiredExceptionExceptionHandlerFactory</exception-handler-factory>
+    </factory>
+</faces-config>

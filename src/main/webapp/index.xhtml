@@ -1,0 +1,189 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view locale="#{settingsBean.locale}" contentType="text/html"/>
+    <h:head>
+        <style type="text/css">
+            body {margin: 0; background-color: #333}
+            body .ui-tabs .ui-tabs-nav li.ui-tabs-header.ui-tabs-outline {box-shadow: none}
+            .item {margin-bottom: 10px}
+            .itemDetailed {margin-bottom: 4px}
+            .ui-carousel-item {text-align: center}
+        </style>
+        <title>#{msg.applicationName}</title>
+        <meta name="description" content="A planisphere is kind of a star chart. It consist of two adjustable disks that rotate on a common pivot. It can be adjusted to display the visible stars for any time and date. It is an instrument to assist in learning how to recognize stars and constellations." />
+        <link rel="icon" type="image/png" href="favicon.png" />
+        <script>
+            window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+            ga("create", "#{settingsBean.googleAnalyticsId}", "auto");
+            ga("send", "pageview");
+        </script>
+        <script async="async" src='https://www.google-analytics.com/analytics.js'></script>
+    </h:head>
+    <h:body>
+        <div>
+            <ui:repeat value="#{renderBean.svgUrlList}" var="svgUrl" varStatus="status">
+                <object id="planisphere-#{status.index}" type="image/svg+xml" data="#{svgUrl}" style="position:absolute; z-index:#{1 - status.index}; width: 100vw"></object>
+            </ui:repeat>
+            <p:dialog id="settingsDialog" header="#{msg.settingsDialogTitle}" widgetVar="settingsDialog" modal="true" width="480" resizable="false" closable="false" dir="#{settingsBean.direction}">
+                <ui:remove>
+                    <!-- keeping these hidden fields out of the form because of missing setters in the backing bean -->
+                </ui:remove>
+                <h:inputHidden id="settingsDialogTitleHidden" value="#{msg.settingsDialogTitle}"/>
+                <h:inputHidden id="directionHidden" value="#{settingsBean.direction}"/>
+                <h:form id="formSettings" prependId="false">
+                    <h:inputHidden id="themeScreenIndexHidden" value="#{settingsBean.themeScreenIndex}"/>
+                    <h:inputHidden id="themePrintIndexHidden" value="#{settingsBean.themePrintIndex}"/>
+                    <p:tabView id="settings">
+                        <p:tab id="location">
+                            <f:facet name="title">
+                                <i class="pi pi-map-marker"></i>
+                            </f:facet>
+                            <div class="item">
+                                <h:outputText id="lblLatitude" value="#{msg.latitude}"/><br/>
+                                <p:selectOneMenu id="cmbLatitude" value="#{settingsBean.latitude}">
+                                    <f:selectItems value="#{settingsBean.latitudeList}" />
+                                </p:selectOneMenu>
+                            </div>
+                            <div class="item">
+                                <h:outputText id="lblLanguage" value="#{msg.language}"/><br/>
+                                <p:selectOneMenu value="#{settingsBean.localeValue}">
+                                    <f:selectItems value="#{settingsBean.localeValueList}" />
+                                    <ui:remove>
+                                        <!-- updating entire tabs discards the user settings -->
+                                    </ui:remove>
+                                    <p:ajax listener="#{settingsBean.localeValueChanged}"
+                                            update=":settingsDialogTitleHidden :directionHidden submitButton cancelButton lblLanguage lblLatitude lblConstellationLabels constellationLabelsMode lblConstellationLines lblConstellationBoundaries lblMilkyWay lblDayLightSavingTimeScale lblCoordsRADec lblEcliptic lblAllVisibleStars"
+                                            oncomplete="updateDialogTitle();updateDialogLayout()"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </p:tab>
+                        <p:tab id="layers">
+                            <f:facet name="title">
+                                <i class="pi pi-sliders-h"></i>
+                            </f:facet>
+                            <label>
+                                <h:selectBooleanCheckbox id="constellationLabels" value="#{settingsBean.constellationLabels}" onchange="toggle()"/>
+                                <h:outputText id="lblConstellationLabels" value="#{msg.constellationLabels}"/>
+                            </label>
+                            <h:selectOneRadio id="constellationLabelsMode" layout="pageDirection" value="#{settingsBean.constellationLabelsMode}">
+                                <f:selectItem itemValue="0" itemLabel="#{msg.constellationFullNames}" />
+                                <f:selectItem itemValue="1" itemLabel="#{msg.constellationFullNamesLatin}" />
+                                <f:selectItem itemValue="2" itemLabel="#{msg.constellationAbbreviations}" />
+                            </h:selectOneRadio>
+                            <div class="itemDetailed">
+                                <label>
+                                    <h:selectBooleanCheckbox value="#{settingsBean.constellationLines}" />
+                                    <h:outputText id="lblConstellationLines" value="#{msg.constellationLines}"/>
+                                </label>
+                            </div>
+                            <div class="itemDetailed">
+                                <label>
+                                    <h:selectBooleanCheckbox value="#{settingsBean.constellationBoundaries}" />
+                                    <h:outputText id="lblConstellationBoundaries" value="#{msg.constellationBoundaries}"/>
+                                </label>
+                            </div>
+                            <div class="itemDetailed">
+                                <label>
+                                    <h:selectBooleanCheckbox immediate="false" value="#{settingsBean.milkyWay}" />
+                                    <h:outputText id="lblMilkyWay" value="#{msg.milkyWay}"/>
+                                </label>
+                            </div>
+                            <div class="itemDetailed">
+                                <label>
+                                    <h:selectBooleanCheckbox value="#{settingsBean.dayLightSavingTimeScale}" />
+                                    <h:outputText id="lblDayLightSavingTimeScale" value="#{msg.dayLightSavingTimeScale}"/>
+                                </label>
+                            </div>
+                            <div class="itemDetailed">
+                                <label>
+                                    <h:selectBooleanCheckbox value="#{settingsBean.coordsRADec}" />
+                                    <h:outputText id="lblCoordsRADec" value="#{msg.coordsRADec}"/>
+                                </label>
+                            </div>
+                            <div class="itemDetailed">
+                                <label>
+                                    <h:selectBooleanCheckbox value="#{settingsBean.ecliptic}" />
+                                    <h:outputText id="lblEcliptic" value="#{msg.ecliptic}"/>
+                                </label>
+                            </div>
+                            <div class="itemDetailed">
+                                <label>
+                                    <h:selectBooleanCheckbox value="#{settingsBean.allVisibleStars}" />
+                                    <h:outputText id="lblAllVisibleStars" value="#{msg.allVisibleStars}"/>
+                                </label>
+                            </div>
+                        </p:tab>
+                        <p:tab id="themes">
+                            <f:facet name="title">
+                                <i class="pi pi-palette"></i>
+                            </f:facet>
+                            <p:tabView id="theme">
+                                <p:tab id="screen">
+                                    <f:facet name="title">
+                                        <i class="pi pi-desktop"></i>
+                                    </f:facet>
+                                    <p:carousel value="#{settingsBean.themeScreenList}" page="#{settingsBean.themeScreenIndex}"
+                                                var="themeScreen" onPageChange="themeScreenPageChange(pageValue)">
+                                        <p:graphicImage name="thumbnails/#{themeScreen}.jpg"/>
+                                    </p:carousel>
+                                </p:tab>
+                                <p:tab id="printer">
+                                    <f:facet name="title">
+                                        <i class="pi pi-print"></i>
+                                    </f:facet>
+                                    <p:carousel value="#{settingsBean.themePrintList}" page="#{settingsBean.themePrintIndex}"
+                                                var="themePrint" onPageChange="themePrintPageChange(pageValue)">
+                                        <p:graphicImage name="thumbnails/#{themePrint}.jpg"/>
+                                    </p:carousel>
+                                </p:tab>
+                            </p:tabView>
+                        </p:tab>
+                    </p:tabView>
+                    <p:outputPanel>
+                        <p:commandButton id="submitButton" ajax="false" value="#{msg.buttonSubmit}" action="#{renderBean.renderSVG()}" icon="pi pi-check" style="margin-right: 10px"/>
+                        <p:commandButton id="cancelButton" ajax="false" value="#{msg.buttonCancel}" action="#{settingsBean.cancelSettings}" icon="pi pi-times" styleClass="ui-button-flat"/>
+                    </p:outputPanel>
+                </h:form>
+            </p:dialog>
+        </div>
+        <script type="text/javascript" language="javascript">
+            //<![CDATA[
+            function updateDialogTitle() {
+                let title = document.getElementById("settingsDialogTitleHidden").value;
+                document.getElementsByClassName("ui-dialog-title")[0].textContent = title;
+            }
+
+            function toggle() {
+                let disabled = !document.getElementById("settings:constellationLabels").checked;
+                for (const input of document.querySelectorAll("#settings\\:constellationLabelsMode input")) {
+                    input.disabled = disabled;
+                }
+            }
+
+            function updateDialogLayout() {
+                document.getElementById("settingsDialog").classList.remove("ui-dialog-rtl");
+                if (document.getElementById("directionHidden").value === "rtl") {
+                    document.getElementById("settingsDialog").classList.add("ui-dialog-rtl");
+                }
+            }
+
+            function themeScreenPageChange(pageValue) {
+                document.getElementById("themeScreenIndexHidden").value = pageValue;
+            }
+
+            function themePrintPageChange(pageValue) {
+                document.getElementById("themePrintIndexHidden").value = pageValue;
+            }
+            //]]>
+        </script>
+        <h:form style="display: none;" prependId="false">
+            <h:commandLink target="htmlOutputWindow" id="exportHTML" action="#{renderBean.renderHTML()}"/>
+        </h:form>
+    </h:body>
+</html>
