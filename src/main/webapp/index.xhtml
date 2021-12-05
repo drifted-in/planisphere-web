@@ -34,12 +34,25 @@
                 <ui:remove>
                     <!-- keeping these hidden fields out of the form because of missing setters in the backing bean -->
                 </ui:remove>
-                <h:inputHidden id="settingsDialogTitleHidden" value="#{msg.settingsDialogTitle}"/>
-                <h:inputHidden id="directionHidden" value="#{settingsBean.direction}"/>
+                <h:inputHidden id="settingsDialogTitleLabel" value="#{msg.settingsDialogTitle}"/>
+                <h:inputHidden id="constellationLabelsLabel" value="#{msg.constellationLabels}"/>
+                <h:inputHidden id="constellationLabelsMode0Label" value="#{msg.constellationFullNames}"/>
+                <h:inputHidden id="constellationLabelsMode1Label" value="#{msg.constellationFullNamesLatin}"/>
+                <h:inputHidden id="constellationLabelsMode2Label" value="#{msg.constellationAbbreviations}"/>
+                <h:inputHidden id="constellationLinesLabel" value="#{msg.constellationLines}"/>
+                <h:inputHidden id="constellationBoundariesLabel" value="#{msg.constellationBoundaries}"/>
+                <h:inputHidden id="milkyWayLabel" value="#{msg.milkyWay}"/>
+                <h:inputHidden id="dayLightSavingTimeScaleLabel" value="#{msg.dayLightSavingTimeScale}"/>
+                <h:inputHidden id="coordsRADecLabel" value="#{msg.coordsRADec}"/>
+                <h:inputHidden id="eclipticLabel" value="#{msg.ecliptic}"/>
+                <h:inputHidden id="allVisibleStarsLabel" value="#{msg.allVisibleStars}"/>
+
+                <h:inputHidden id="directionValue" value="#{settingsBean.direction}"/>
+
                 <h:form id="formSettings" prependId="false">
                     <h:inputHidden id="themeScreenIndexHidden" value="#{settingsBean.themeScreenIndex}"/>
                     <h:inputHidden id="themePrintIndexHidden" value="#{settingsBean.themePrintIndex}"/>
-                    <p:tabView id="settings">
+                    <p:tabView id="settings" prependId="false">
                         <p:tab id="location">
                             <f:facet name="title">
                                 <i class="pi pi-map-marker"></i>
@@ -58,8 +71,8 @@
                                         <!-- updating entire tabs discards the user settings -->
                                     </ui:remove>
                                     <p:ajax listener="#{settingsBean.localeValueChanged}"
-                                            update=":settingsDialogTitleHidden :directionHidden submitButton cancelButton lblLanguage lblLatitude lblConstellationLabels constellationLabelsMode lblConstellationLines lblConstellationBoundaries lblMilkyWay lblDayLightSavingTimeScale lblCoordsRADec lblEcliptic lblAllVisibleStars"
-                                            oncomplete="updateDialogTitle();updateDialogLayout()"/>
+                                            update=":settingsDialogTitleLabel lblLatitude lblLanguage :constellationLabelsLabel :constellationLabelsMode0Label :constellationLabelsMode1Label constellationLabelsMode2Label :constellationLinesLabel :constellationBoundariesLabel :milkyWayLabel :dayLightSavingTimeScaleLabel :coordsRADecLabel :eclipticLabel :allVisibleStarsLabel :directionValue submitButton cancelButton"
+                                            oncomplete="updateLabels();updateDialogDirection()"/>
                                 </p:selectOneMenu>
                             </div>
                         </p:tab>
@@ -67,56 +80,34 @@
                             <f:facet name="title">
                                 <i class="pi pi-sliders-h"></i>
                             </f:facet>
-                            <label>
-                                <h:selectBooleanCheckbox id="constellationLabels" value="#{settingsBean.constellationLabels}" onchange="toggle()"/>
-                                <h:outputText id="lblConstellationLabels" value="#{msg.constellationLabels}"/>
-                            </label>
-                            <h:selectOneRadio id="constellationLabelsMode" layout="pageDirection" value="#{settingsBean.constellationLabelsMode}">
-                                <f:selectItem itemValue="0" itemLabel="#{msg.constellationFullNames}" />
-                                <f:selectItem itemValue="1" itemLabel="#{msg.constellationFullNamesLatin}" />
-                                <f:selectItem itemValue="2" itemLabel="#{msg.constellationAbbreviations}" />
-                            </h:selectOneRadio>
                             <div class="itemDetailed">
-                                <label>
-                                    <h:selectBooleanCheckbox value="#{settingsBean.constellationLines}" />
-                                    <h:outputText id="lblConstellationLines" value="#{msg.constellationLines}"/>
-                                </label>
+                                <p:selectBooleanCheckbox id="constellationLabels" value="#{settingsBean.constellationLabels}" itemLabel="#{msg.constellationLabels}" onchange="toggleConstellationLabels()" />
+                                <p:selectOneRadio id="constellationLabelsMode" layout="pageDirection" value="#{settingsBean.constellationLabelsMode}" style="margin-left: 30px;">
+                                    <f:selectItem itemValue="0" itemLabel="#{msg.constellationFullNames}" />
+                                    <f:selectItem itemValue="1" itemLabel="#{msg.constellationFullNamesLatin}" />
+                                    <f:selectItem itemValue="2" itemLabel="#{msg.constellationAbbreviations}" />
+                                </p:selectOneRadio>
                             </div>
                             <div class="itemDetailed">
-                                <label>
-                                    <h:selectBooleanCheckbox value="#{settingsBean.constellationBoundaries}" />
-                                    <h:outputText id="lblConstellationBoundaries" value="#{msg.constellationBoundaries}"/>
-                                </label>
+                                <p:selectBooleanCheckbox id="constellationLines" value="#{settingsBean.constellationLines}" itemLabel="#{msg.constellationLines}" />
                             </div>
                             <div class="itemDetailed">
-                                <label>
-                                    <h:selectBooleanCheckbox immediate="false" value="#{settingsBean.milkyWay}" />
-                                    <h:outputText id="lblMilkyWay" value="#{msg.milkyWay}"/>
-                                </label>
+                                <p:selectBooleanCheckbox id="constellationBoundaries" value="#{settingsBean.constellationBoundaries}" itemLabel="#{msg.constellationBoundaries}" />
                             </div>
                             <div class="itemDetailed">
-                                <label>
-                                    <h:selectBooleanCheckbox value="#{settingsBean.dayLightSavingTimeScale}" />
-                                    <h:outputText id="lblDayLightSavingTimeScale" value="#{msg.dayLightSavingTimeScale}"/>
-                                </label>
+                                <p:selectBooleanCheckbox id="milkyWay" value="#{settingsBean.milkyWay}" itemLabel="#{msg.milkyWay}" />
                             </div>
                             <div class="itemDetailed">
-                                <label>
-                                    <h:selectBooleanCheckbox value="#{settingsBean.coordsRADec}" />
-                                    <h:outputText id="lblCoordsRADec" value="#{msg.coordsRADec}"/>
-                                </label>
+                                <p:selectBooleanCheckbox id="dayLightSavingTimeScale" value="#{settingsBean.dayLightSavingTimeScale}" itemLabel="#{msg.dayLightSavingTimeScale}" />
                             </div>
                             <div class="itemDetailed">
-                                <label>
-                                    <h:selectBooleanCheckbox value="#{settingsBean.ecliptic}" />
-                                    <h:outputText id="lblEcliptic" value="#{msg.ecliptic}"/>
-                                </label>
+                                <p:selectBooleanCheckbox id="coordsRADec" value="#{settingsBean.coordsRADec}" itemLabel="#{msg.coordsRADec}" />
                             </div>
                             <div class="itemDetailed">
-                                <label>
-                                    <h:selectBooleanCheckbox value="#{settingsBean.allVisibleStars}" />
-                                    <h:outputText id="lblAllVisibleStars" value="#{msg.allVisibleStars}"/>
-                                </label>
+                                <p:selectBooleanCheckbox id="ecliptic" value="#{settingsBean.ecliptic}" itemLabel="#{msg.ecliptic}" />
+                            </div>
+                            <div class="itemDetailed">
+                                <p:selectBooleanCheckbox id="allVisibleStars" value="#{settingsBean.allVisibleStars}" itemLabel="#{msg.allVisibleStars}" />
                             </div>
                         </p:tab>
                         <p:tab id="themes">
@@ -154,21 +145,42 @@
         </div>
         <script type="text/javascript" language="javascript">
             //<![CDATA[
-            function updateDialogTitle() {
-                let title = document.getElementById("settingsDialogTitleHidden").value;
-                document.getElementsByClassName("ui-dialog-title")[0].textContent = title;
+            function updateLabels() {
+                const lblSettingsDialogTitle = document.getElementById("settingsDialogTitleLabel").value;
+                document.getElementsByClassName("ui-dialog-title")[0].textContent = lblSettingsDialogTitle;
+
+                const checkBoxIds = [
+                    "constellationLabels",
+                    "constellationLines",
+                    "constellationBoundaries",
+                    "milkyWay",
+                    "dayLightSavingTimeScale",
+                    "coordsRADec",
+                    "ecliptic",
+                    "allVisibleStars"
+                ];
+
+                checkBoxIds.forEach(function(checkBoxId) {
+                    document.getElementById(checkBoxId).getElementsByClassName("ui-chkbox-label")[0].textContent =
+                            document.getElementById(checkBoxId + "Label").value;
+                });
+
+                document.querySelectorAll("#constellationLabelsMode label").forEach(function(label) {
+                    const labelId = label.getAttribute("for").replace(":", "") + "Label";
+                    label.textContent = document.getElementById(labelId).value;
+                });
             }
 
-            function toggle() {
+            function toggleConstellationLabels() {
                 let disabled = !document.getElementById("settings:constellationLabels").checked;
                 for (const input of document.querySelectorAll("#settings\\:constellationLabelsMode input")) {
                     input.disabled = disabled;
                 }
             }
 
-            function updateDialogLayout() {
+            function updateDialogDirection() {
                 document.getElementById("settingsDialog").classList.remove("ui-dialog-rtl");
-                if (document.getElementById("directionHidden").value === "rtl") {
+                if (document.getElementById("directionValue").value === "rtl") {
                     document.getElementById("settingsDialog").classList.add("ui-dialog-rtl");
                 }
             }
