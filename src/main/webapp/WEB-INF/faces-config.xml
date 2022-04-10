@@ -33,7 +33,7 @@
             <supported-locale>zh_TW</supported-locale>
         </locale-config>
         <resource-bundle>
-            <base-name>in.drifted.planisphere.web.UnicodeResourceBundle</base-name>
+            <base-name>in.drifted.planisphere.resources.localizations.messages</base-name>
             <var>msg</var>
         </resource-bundle>
     </application>
