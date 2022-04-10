@@ -29,7 +29,7 @@ import javax.servlet.http.Cookie;
 @SessionScoped
 public class SettingsBean implements Serializable {
 
-    private static final List<Integer> LATIDUTE_LIST = new ArrayList<>();
+    private static final List<Integer> LATITUDE_LIST = new ArrayList<>();
     private static final Map<String, Locale> LOCALE_MAP = new TreeMap<>();
     private static final List<String> THEME_SCREEN_LIST = new ArrayList<>();
     private static final List<String> THEME_PRINT_LIST = new ArrayList<>();
@@ -156,12 +156,12 @@ public class SettingsBean implements Serializable {
     }
 
     private static void createLatitudeList() {
-        LATIDUTE_LIST.clear();
+        LATITUDE_LIST.clear();
         for (Integer i = 80; i >= 0; i = i - 5) {
-            LATIDUTE_LIST.add(i);
+            LATITUDE_LIST.add(i);
         }
         for (Integer i = -5; i >= -80; i = i - 5) {
-            LATIDUTE_LIST.add(i);
+            LATITUDE_LIST.add(i);
         }
     }
 
@@ -247,7 +247,7 @@ public class SettingsBean implements Serializable {
     }
 
     public List<Integer> getLatitudeList() {
-        return LATIDUTE_LIST;
+        return LATITUDE_LIST;
     }
 
     public List<String> getThemePrintList() {
