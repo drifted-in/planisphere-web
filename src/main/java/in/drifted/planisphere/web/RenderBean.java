@@ -80,7 +80,8 @@ public class RenderBean implements Serializable, HttpSessionBindingListener {
                 Path svgPath = Files.createTempFile(outputFolderPath, "planisphere", ".svg");
 
                 try (
-                         FileOutputStream outputStream = new FileOutputStream(svgPath.toFile());  ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+                        FileOutputStream outputStream = new FileOutputStream(svgPath.toFile());
+                        ByteArrayOutputStream output = new ByteArrayOutputStream()) {
 
                     if (i == 1) {
                         options = new Options(options.getLatitudeFixed(), options.getLocale(), options.getThemeScreen(), options.getThemePrint(), -1,

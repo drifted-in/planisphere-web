@@ -303,7 +303,7 @@ public class SettingsBean implements Serializable {
     }
 
     public List<String> getLocaleValueList() {
-        return new ArrayList<String>(LOCALE_MAP.keySet());
+        return new ArrayList<>(LOCALE_MAP.keySet());
     }
 
     public Integer getThemeScreenIndex() {
