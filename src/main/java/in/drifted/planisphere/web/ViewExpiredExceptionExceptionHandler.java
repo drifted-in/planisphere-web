@@ -48,7 +48,7 @@ public final class ViewExpiredExceptionExceptionHandler extends ExceptionHandler
                 FacesContext fc = FacesContext.getCurrentInstance();
                 NavigationHandler nav = fc.getApplication().getNavigationHandler();
                 try {
-                    nav.handleNavigation(fc, null, "index?faces-redirect=true");
+                    nav.handleNavigation(fc, null, "expired?faces-redirect=true");
                     fc.renderResponse();
                 } finally {
                     i.remove();
