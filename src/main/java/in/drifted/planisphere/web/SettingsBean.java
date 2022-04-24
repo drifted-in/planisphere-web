@@ -13,7 +13,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package in.drifted.planisphere.web;
 
 import in.drifted.planisphere.Options;
@@ -248,7 +247,7 @@ public class SettingsBean implements Serializable {
             properties.load(inputStream);
             return properties.getProperty("id");
 
-        } catch (IOException e) {
+        } catch (Exception e) {
         }
         return null;
     }
