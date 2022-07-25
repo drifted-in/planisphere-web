@@ -33,14 +33,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.Cookie;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
+import jakarta.inject.Named;
+import jakarta.servlet.http.Cookie;
 
-@ManagedBean
+@Named
 @SessionScoped
 public class SettingsBean implements Serializable {
 

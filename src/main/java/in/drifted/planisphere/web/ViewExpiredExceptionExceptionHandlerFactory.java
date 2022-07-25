@@ -16,8 +16,8 @@
 
 package in.drifted.planisphere.web;
 
-import javax.faces.context.ExceptionHandler;
-import javax.faces.context.ExceptionHandlerFactory;
+import jakarta.faces.context.ExceptionHandler;
+import jakarta.faces.context.ExceptionHandlerFactory;
 
 public final class ViewExpiredExceptionExceptionHandlerFactory extends ExceptionHandlerFactory {
 

@@ -28,15 +28,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpSessionBindingEvent;
-import javax.servlet.http.HttpSessionBindingListener;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpSessionBindingEvent;
+import jakarta.servlet.http.HttpSessionBindingListener;
 
-@ManagedBean
+@Named
 @ViewScoped
 public class RenderBean implements Serializable, HttpSessionBindingListener {
 
@@ -44,12 +44,8 @@ public class RenderBean implements Serializable, HttpSessionBindingListener {
     private static final List<String> SVG_URL_LIST = new LinkedList<>();
     private String htmlUrl;
 
-    @ManagedProperty(value = "#{settingsBean}")
+    @Inject
     private SettingsBean settingsBean;
-
-    public void setSettingsBean(SettingsBean settingsBean) {
-        this.settingsBean = settingsBean;
-    }
 
     @Override
     public void valueUnbound(HttpSessionBindingEvent event) {
